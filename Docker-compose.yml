@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  proxy-service:
+    image: proxy-service # Replace with the actual image name you build for proxy-service
+    build:
+      context: .proxy-service  # Replace with the actual path to the proxy-service Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - database  # This ensures that the database service is started before proxy-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  auth-service:
+    image: auth-service  # Replace with the actual image name you build for auth-service
+    build:
+      context: .auth-service  # Replace with the actual path to the auth-service Dockerfile
+    ports:
+      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
+    depends_on:
+      - database  # This ensures that the database service is started before auth-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  common-service:
+    image: common-service  # Replace with the actual image name you build for auth-service
+    build:
+      context: .common-service  # Replace with the actual path to the auth-service Dockerfile
+    ports:
+      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
+    depends_on:
+      - database  # This ensures that the database service is started before auth-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  umm-service:
+    image: umm-service  # Replace with the actual image name you build for auth-service
+    build:
+      context: .umm-service  # Replace with the actual path to the auth-service Dockerfile
+    ports:
+      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
+    depends_on:
+      - database  # This ensures that the database service is started before auth-service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
