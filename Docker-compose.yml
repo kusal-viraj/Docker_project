@@ -4,44 +4,62 @@ services:
   proxy-service:
     image: proxy-service # Replace with the actual image name you build for proxy-service
     build:
-      context: .proxy-service  # Replace with the actual path to the proxy-service Dockerfile
+      context: proxy-service  # Replace with the actual path to the proxy-service Dockerfile
     ports:
       - "8082:8082"
-    depends_on:
-      - database  # This ensures that the database service is started before proxy-service
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
+#    depends_on:
+#      - front-end  # This ensures that the database service is started before auth-service
+#    networks:
+#      - my-network
 
   auth-service:
     image: auth-service  # Replace with the actual image name you build for auth-service
     build:
-      context: .auth-service  # Replace with the actual path to the auth-service Dockerfile
+      context: auth-service  # Replace with the actual path to the auth-service Dockerfile
     ports:
-      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
-    depends_on:
-      - database  # This ensures that the database service is started before auth-service
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "9000:9000"  # Use a different port to avoid conflicts with proxy-service
+    network_mode: host
+#    depends_on:
+#      - front-end  # This ensures that the database service is started before auth-service
+#    networks:
+#      - my-network
 
   common-service:
     image: common-service  # Replace with the actual image name you build for auth-service
     build:
-      context: .common-service  # Replace with the actual path to the auth-service Dockerfile
+      context: common-service  # Replace with the actual path to the auth-service Dockerfile
     ports:
-      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
-    depends_on:
-      - database  # This ensures that the database service is started before auth-service
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "9008:9008"  # Use a different port to avoid conflicts with proxy-service
+    network_mode: host
+#    depends_on:
+#      - front-end  # This ensures that the database service is started before auth-service
+#    networks:
+#      - my-network
 
   umm-service:
     image: umm-service  # Replace with the actual image name you build for auth-service
     build:
-      context: .umm-service  # Replace with the actual path to the auth-service Dockerfile
+      context: user-management-service  # Replace with the actual path to the auth-service Dockerfile
     ports:
-      - "8083:8082"  # Use a different port to avoid conflicts with proxy-service
-    depends_on:
-      - database  # This ensures that the database service is started before auth-service
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "9003:9003"  # Use a different port to avoid conflicts with proxy-service
+    network_mode: host
 
+#    depends_on:
+#      - front-end  # This ensures that the database service is started before auth-service
+##    extra_hosts:
+##      - "host.docker.internal:host-gateway"
+##    networks:
+##      - my-network
+
+
+#  front-end:
+#    image: papertrlui-v2  # Replace with the actual image name you build for auth-service
+#    build:
+#      context: front_end  # Replace with the actual path to the auth-service Dockerfile
+#    network_mode: host
+#    ports:
+#      - "4200:4200"  # Use a different port to avoid conflicts with proxy-service
+
+#networks:
+#  my-network:

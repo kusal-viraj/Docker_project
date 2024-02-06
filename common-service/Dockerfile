@@ -10,9 +10,11 @@ RUN yum -y install curl
 RUN yum install -y unzip
 RUN yum install -y telnet
 RUN yum install -y mariadb
+RUN yum install -y net-tools
 
 RUN mkdir -p /papertrl/apps
 COPY common-service.jar /papertrl/apps/common-service.jar
-EXPOSE 8082
+EXPOSE 9008
 
-CMD ["java", "-jar", "/opt/app/common-service.jar"]
+#CMD ["java", "-jar", "/papertrl/apps/common-service.jar", "--server.address=0.0.0.0", "--server.port=9008"]
+CMD ["java", "-jar", "/papertrl/apps/common-service.jar"]
