@@ -1,65 +1,96 @@
 version: '3'
 
+networks:
+  docker_host:
+    driver: bridge  # Use an overlay network for better isolation
+
 services:
-  proxy-service:
-    image: proxy-service # Replace with the actual image name you build for proxy-service
+  papertrl-proxy:
     build:
       context: proxy-service  # Replace with the actual path to the proxy-service Dockerfile
+    container_name: papertrl-proxy
     ports:
       - "8082:8082"
-    network_mode: host
-#    depends_on:
-#      - front-end  # This ensures that the database service is started before auth-service
-#    networks:
-#      - my-network
+    networks:
+      - docker_host
 
-  auth-service:
-    image: auth-service  # Replace with the actual image name you build for auth-service
+  papertrl-auth:
     build:
       context: auth-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-auth
     ports:
       - "9000:9000"  # Use a different port to avoid conflicts with proxy-service
-    network_mode: host
-#    depends_on:
-#      - front-end  # This ensures that the database service is started before auth-service
-#    networks:
-#      - my-network
+    networks:
+      - docker_host
 
-  common-service:
-    image: common-service  # Replace with the actual image name you build for auth-service
+  papertrl-common:
     build:
       context: common-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-common
     ports:
       - "9008:9008"  # Use a different port to avoid conflicts with proxy-service
-    network_mode: host
-#    depends_on:
-#      - front-end  # This ensures that the database service is started before auth-service
-#    networks:
-#      - my-network
+    networks:
+      - docker_host
 
-  umm-service:
-    image: umm-service  # Replace with the actual image name you build for auth-service
+  papertrl-umm:
     build:
       context: user-management-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-umm
     ports:
       - "9003:9003"  # Use a different port to avoid conflicts with proxy-service
-    network_mode: host
+    networks:
+      - docker_host
 
-#    depends_on:
-#      - front-end  # This ensures that the database service is started before auth-service
-##    extra_hosts:
-##      - "host.docker.internal:host-gateway"
-##    networks:
-##      - my-network
+  papertrl-integration:
+    build:
+      context: integration-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-integration
+    ports:
+      - "9006:9006"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
 
+  papertrl-vp:
+    build:
+      context: vp-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-vp
+    ports:
+      - "9002:9002"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
 
-#  front-end:
-#    image: papertrlui-v2  # Replace with the actual image name you build for auth-service
-#    build:
-#      context: front_end  # Replace with the actual path to the auth-service Dockerfile
-#    network_mode: host
-#    ports:
-#      - "4200:4200"  # Use a different port to avoid conflicts with proxy-service
+  papertrl-tenant:
+    build:
+      context: tenant-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-tenant
+    ports:
+      - "9004:9004"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
 
-#networks:
-#  my-network:
+  papertrl-payment:
+    build:
+      context: payment-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-payment
+    ports:
+      - "5060:5060"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
+
+  papertrl-message:
+    build:
+      context: message-service  # Replace with the actual path to the auth-service Dockerfile
+    container_name: papertrl-message
+    ports:
+      - "5020:5020"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
+
+  front-end:
+    build:
+      context: front_end  # Replace with the actual path to the auth-service Dockerfile
+    container_name: front-end
+    ports:
+      - "4200:4200"  # Use a different port to avoid conflicts with proxy-service
+    networks:
+      - docker_host
